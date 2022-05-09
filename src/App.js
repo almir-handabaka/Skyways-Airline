@@ -8,21 +8,23 @@ import { UserAuthContextProvider } from "./context/UserAuthContext";
 
 function App() {
   return (
-    <UserAuthContextProvider>
-      <Routes>
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
+    <div>
+      <UserAuthContextProvider>
+        <Routes>
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
 
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Register />} />
-      </Routes>
-    </UserAuthContextProvider>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
+        </Routes>
+      </UserAuthContextProvider>
+    </div>
   );
 }
 
