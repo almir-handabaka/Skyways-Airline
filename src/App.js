@@ -1,12 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import ProtectedRoute from "./components/ProtectedRoute";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 
-function App() {
+import Login from "./loginAndRegister.js"
+import ProtectedRoute from "./ProtectedRoute.js"
+import Register from "./loginAndRegister.js"
+import PocetnaStranica from "./PocetnaStranica.js"
+
+
+export default function App() {
   return (
     <div>
       <UserAuthContextProvider>
@@ -16,7 +18,7 @@ function App() {
             element={
               <ProtectedRoute>
 
-                <Home />
+                <PocetnaStranica/>
               </ProtectedRoute>
             }
           />
@@ -28,4 +30,3 @@ function App() {
   );
 }
 
-export default App;
