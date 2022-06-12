@@ -1,11 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import "./App.css";
+//import "./App.css";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 
-import Login from "./loginAndRegister.js"
-import ProtectedRoute from "./ProtectedRoute.js"
-import Register from "./loginAndRegister.js"
-import PocetnaStranica from "./PocetnaStranica.js"
+import Administrator from './components/administrator/Administrator';
 
 
 export default function App() {
@@ -13,17 +10,7 @@ export default function App() {
     <div>
       <UserAuthContextProvider>
         <Routes>
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-
-                <PocetnaStranica/>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
+          <Route path="/administrator" element={<Administrator />} />
         </Routes>
       </UserAuthContextProvider>
     </div>
