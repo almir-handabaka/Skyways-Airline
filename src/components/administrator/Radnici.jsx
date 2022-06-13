@@ -4,7 +4,7 @@ import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { db } from "../../firebase";
-import { doc, setDoc, collection, getDocs, where, query } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, where, query, deleteDoc  } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 const Radnici = () => {
@@ -51,29 +51,30 @@ const Radnici = () => {
     setPoruka("Šifra kopirana u clipboard!");
   }
 
-  const ucitajRadnike = async () => {
 
-  }
+  const deleteUposlenika = async (radnik_id) => {
+    try{
+      await deleteDoc(doc(db, "users", radnik_id));
+      let tmp_radnici = radnici.filter(word => word.id !== radnik_id);
+      setRadnike(tmp_radnici);
+    }catch (error){
+      console.log("greska pri brisanju uposlenika");
+    }
+  } 
+
+
 
   useEffect(()=> {
-    const unsubscribe = async () => {
+    const getRadnike = async () => {
       setRadnike([]);
-      const q = query(collection(db, "users"), where("type", "==", "employee"));
+      const q = query(collection(db, "users"), where("type", "in", ["employee", "administrator"]));
 
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-         let tmp_radnici = radnici;
-         tmp_radnici.push(doc.data());
-         setRadnike(tmp_radnici);
-      });
-
-
+      setRadnike(querySnapshot.docs.map((doc) => ({ ...doc.data(), id:doc.id }) ));
     }
 
     return () => {
-      unsubscribe();
+      getRadnike();
     };
 
   }, [])
@@ -89,17 +90,16 @@ const Radnici = () => {
         radnici.map((radnik) => {
           return <div className="list-group">
         <a href="#" className="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-          <span class="p-2 bg-success border border-light rounded-circle mt-auto mb-auto me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Let u toku">
-          <span class="visually-hidden">Online</span>
-          </span>
+          
           <div className="ms-2 me-auto">
             <div className="fw-bold">Korisničko ime</div>
-            almir_handabaka
+            {radnik.email}
           </div>
           <div className="ms-2 me-auto">
             <div className="fw-bold">Status</div>
-            Administrator
+            {radnik.type}
           </div>
+          <button type="button" className="btn btn-outline-danger" onClick={() => deleteUposlenika(radnik.id)} >X</button>
         </a>
 
       </div>
@@ -118,6 +118,8 @@ const Radnici = () => {
           <input type="email" className="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" value={noviRadnik.email} onChange={handleInput} />
           <span className="input-group-text" id="basic-addon1">Šifra</span>
           <input type="text" className="form-control" aria-label="Šifra" aria-describedby="basic-addon1" name="password" value={noviRadnik.password} disabled />
+
+
         </div>
 
         <Modal.Footer>

@@ -12,10 +12,10 @@ const Administrator = () => {
   return (
     <Container className="m-3">
       <Row>
-        <Col xs={8} className="border" >
+        <Col xs={7} className="border" >
           <Letovi/>
         </Col>
-        <Col xs={4} className="border">
+        <Col xs={5} className="border">
           <Radnici/>
         </Col>
       </Row>
