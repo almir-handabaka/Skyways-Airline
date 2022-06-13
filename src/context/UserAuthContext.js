@@ -36,7 +36,7 @@ export function UserAuthContextProvider({ children }) {
     let tmp_user;
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
 
-      console.log("Auth", currentuser);
+      //console.log("Auth", currentuser);
       tmp_user = currentuser;
       setUser(currentuser);
     });
@@ -56,12 +56,12 @@ export function UserAuthContextProvider({ children }) {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        //console.log(doc.id, " => ", doc.data());
         setUser({ ...user, myId: doc.data().id, tickets: doc.data().tickets, type: doc.data().type });
 
       });
 
-      console.log(user);
+      //console.log(user);
     }
 
     return () => {
