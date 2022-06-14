@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { UserAuthContextProvider } from "./context/UserAuthContext";
 
 import Administrator from './components/administrator/Administrator';
-
+import Radnik from './components/radnik/Radnik';
 
 export default function App() {
   return (
@@ -11,6 +11,7 @@ export default function App() {
       <UserAuthContextProvider>
         <Routes>
           <Route path="/administrator" element={<Administrator />} />
+          <Route path="/radnik" element={<Radnik />} />
         </Routes>
       </UserAuthContextProvider>
     </div>

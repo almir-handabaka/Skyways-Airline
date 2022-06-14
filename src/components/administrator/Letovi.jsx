@@ -11,12 +11,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Letovi = () => {
   const [show, setShow] = useState(false);
-  const [noviLet, setLet] = useState({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:""});
+  const [noviLet, setLet] = useState({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:"", sifra_leta:"", id:""});
   const [edit, setEdit] = useState(false);
   const[letovi, setLetovi] = useState([]);
 
-  const handleClose = () => {setShow(false); setEdit(false); setLet({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:""})};
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setShow(false); 
+    setEdit(false); 
+    setLet({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:"", sifra_leta:"", id:""})
+   console.log("handleClose")
+  };
+
+  const handleShow = () => {
+    setShow(true);
+  };
 
 
   const handleInput = (event) => {
@@ -25,38 +33,41 @@ const Letovi = () => {
   }
 
   const editLet = (let_info) => {
-    //setLet({start: let_info.start, end:let_info.end, prva_klasa:let_info.prva_klasa, biznis_klasa:let_info.biznis_klasa, ekonomska_klasa:let_info.ekonomska_klasa, cijena_prva_klasa:let_info.cijena_prva_klasa, cijena_biznis_klasa:let_info.cijena_biznis_klasa, cijena_ekonomska_klasa:let_info.cijena_ekonomska_klasa, datum: let_info.datum, vrijeme: let_info.vrijeme, status:"", avion:""})
+
+    setEdit(true)
     setLet(let_info);
-    setEdit(true);
-    handleShow();
+
+    return handleShow();
   }
 
+  const prikaziModal = () => {
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let nova_sifra = "";
+    for (var i = 0; i < 10; i++)
+      nova_sifra += possible.charAt(Math.floor(Math.random() * possible.length));
+    setLet({...noviLet, ["sifra_leta"]: nova_sifra, ["id"]: uuidv4()});
+    
+    setShow(true);
+  }
 
   const dodajLet = async () => {
-    
-    if(edit === false){
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let nova_sifra;
-      for (var i = 0; i < 10; i++)
-        nova_sifra += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      setLet({...noviLet, ["sifra_leta"]: nova_sifra});
-      setLet({...noviLet, ["id"]: uuidv4()});
-    }
-    
-
+  
+    console.log(noviLet);
     try{
       await setDoc(doc(db, "letovi", noviLet.id), noviLet);
-
+      if(edit === true){
+        setEdit(false);
+        handleClose();
+      }
+      let novi_letovi = letovi.concat(noviLet)
+      setLetovi(novi_letovi);
     } catch(error){
+      console.log("greska prilikom kreiranja letova");
       console.log(error.message);
       //setPoruka("Greska prilikom kreiranja letova!")
     }
 
-    if(edit === false){
-      setEdit(false);
-      handleClose();
-    }
+    
 
   }
 
@@ -77,13 +88,13 @@ const Letovi = () => {
 
   }, [])
 
-
+ // console.log("rerender");
   return (
     <>
       <div className="m-2 d-flex justify-content-between align-items-start"> 
       <div> 
         <button type="button" class="btn btn-outline-success me-2">Info o avionima</button>
-        <button type="button" class="btn btn-outline-success" onClick={handleShow}>Novi let</button>
+        <button type="button" class="btn btn-outline-success" onClick={prikaziModal}>Novi let</button>
       </div>
         <button type="button" class="btn btn-outline-success"> <GiCommercialAirplane /> Flight Tracker</button>
       </div>
