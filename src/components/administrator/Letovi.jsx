@@ -110,7 +110,7 @@ const Letovi = () => {
               </span>
               <div className="ms-2 me-auto">
                 <div className="fw-bold">Šifra</div>
-                {let_info.sifra}
+                {let_info.sifra_leta}
               </div>
               <div className="ms-2 me-auto">
                 <div className="fw-bold">Lokacija</div>
