@@ -4,6 +4,7 @@ import { UserAuthContextProvider } from "./context/UserAuthContext";
 
 import Administrator from './components/administrator/Administrator';
 import Radnik from './components/radnik/Radnik';
+import FlightTrackerMap from './components/korisnik/FlightTrackerMap';
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Routes>
           <Route path="/administrator" element={<Administrator />} />
           <Route path="/radnik" element={<Radnik />} />
+          <Route path="/flight-tracker" element={<FlightTrackerMap />} />
         </Routes>
       </UserAuthContextProvider>
     </div>
