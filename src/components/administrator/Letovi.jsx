@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Letovi = () => {
   const [show, setShow] = useState(false);
-  const [noviLet, setLet] = useState({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:"", sifra_leta:"", id:""});
+  const [noviLet, setLet] = useState({start: "", end:"", prva_klasa:0, biznis_klasa:0, ekonomska_klasa:0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, datum: "", vrijeme: "", status:"", avion:"", sifra_leta:"", id:"", karte_biznis: [], karte_prva:[], karte_ekonomska:[]});
   const [edit, setEdit] = useState(false);
   const[letovi, setLetovi] = useState([]);
 

@@ -2,12 +2,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { doc, setDoc, collection, getDocs, where, query, deleteDoc, get, updateDoc, arrayUnion, arrayRemove  } from "firebase/firestore";
+import 'bootstrap/dist/js/bootstrap.js';
+import { runTransaction, doc, setDoc, collection, getDocs, where, query, deleteDoc, get, updateDoc, arrayUnion, arrayRemove  } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useState, useEffect } from 'react';
 
 
-const default_values = {prva_klasa: 0, biznis_klasa: 0, ekonomska_klasa: 0, cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, id:"", totalna_cijena:0}
+const default_values = {prva_klasa: [], biznis_klasa: [], ekonomska_klasa: [], cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, id:"", totalna_cijena:0}
 
 
 const Radnik = () => {
@@ -33,30 +34,58 @@ const Radnik = () => {
     const letoviRef = doc(db, "letovi", karte.id);
 
 
-    // promjeniti u jedan poziv, koristiti jedan niz/mapu za letove
+    // promjeniti u jednu transakciju, koristiti jedan niz/mapu za letove
     // za radnikovu prodaju koristiti id radnika koji je prodao ili generisati id za sale
     
-   
-    await updateDoc(letoviRef, {
-      karte_biznis: arrayUnion(karte.biznis_klasa)
-    });
 
-    await updateDoc(letoviRef, {
-      karte_prva: arrayUnion(karte.prva_klasa)
-    });
+    try {
+      await runTransaction(db, async (transaction) => {
+        const sfDoc = await transaction.get(letoviRef);
+        if (!sfDoc.exists()) {
+          throw "Document does not exist!";
+        }
 
-    await updateDoc(letoviRef, {
-      karte_ekonomska: arrayUnion(karte.ekonomska_klasa)
-    });
+        let newKarte_biznis = sfDoc.data().karte_biznis;
+        let newKarte_prva = sfDoc.data().karte_prva;
+        let newKarte_ekonomska = sfDoc.data().karte_ekonomska;
+
+        newKarte_biznis = newKarte_biznis.concat(karte.biznis_klasa);
+        newKarte_prva = newKarte_prva.concat(karte.prva_klasa);
+        newKarte_ekonomska = newKarte_ekonomska.concat(karte.ekonomska_klasa);
+        
+        console.log("--------------")
+        console.log(karte.biznis_klasa, karte.prva_klasa, karte.ekonomska_klasa)
+
+        transaction.update(letoviRef, { karte_biznis: newKarte_biznis, karte_prva: newKarte_prva, karte_ekonomska:newKarte_ekonomska });
+      });
+        console.log("Transaction successfully committed!");
+      } catch (e) {
+        console.log("Transaction failed: ", e);
+      }
+
+    
 
   }
 
 
   const handleInput = (event) => {
     const {name, value} = event.target;
-    setKarte({...karte, [name]: value});
+    if(typeof value !== 'undefined'){
+      let tmp_lista = []
+      for(let i = 0;i<parseInt(value);i++){
+        tmp_lista.push(value)
+      }
+      console.log(tmp_lista)
+      setKarte({...karte, [name]: tmp_lista});
+    }
     
   }
+
+  useEffect(() => {
+    let totalna_cijena = parseInt(karte.prva_klasa.length) * karte.cijena_prva_klasa + parseInt(karte.biznis_klasa.length) * karte.cijena_biznis_klasa + parseInt(karte.ekonomska_klasa.length) * karte.cijena_ekonomska_klasa;
+      setKarte({...karte, ["totalna_cijena"]: totalna_cijena});
+
+  }, [karte.prva_klasa, karte.biznis_klasa, karte.ekonomska_klasa])
 
 
   useEffect(()=> {
@@ -87,8 +116,8 @@ const Radnik = () => {
             {
               letovi && letovi.map((let_info) => {
                 return <a href="#" className="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
-                <span class="p-2 bg-success border border-light rounded-circle mt-auto mb-auto me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Let u toku">
-                    <span class="visually-hidden">Let u toku</span>
+                <span className="p-2 bg-success border border-light rounded-circle mt-auto mb-auto me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Let u toku">
+                    <span className="visually-hidden">Let u toku</span>
                   </span>
                   <div className="ms-2 me-auto">
                     <div className="fw-bold">Šifra</div>
@@ -105,22 +134,22 @@ const Radnik = () => {
 
                   <div className="ms-2 me-auto">
                     <div className="fw-bold text-center">I</div>
-                    25/40
+                    {(typeof let_info.karte_prva !== 'undefined') ? let_info.karte_prva.length:0}/{let_info.prva_klasa}
                   </div>
 
                   <div className="ms-2 me-auto">
                     <div className="fw-bold text-center">II</div>
-                    25/40
+                    {(typeof let_info.karte_biznis !== 'undefined') ? let_info.karte_biznis.length:0}/{let_info.biznis_klasa}
                   </div>
 
                   <div className="ms-2 me-auto">
                     <div className="fw-bold text-center">III</div>
-                    25/40
+                    {(typeof let_info.karte_ekonomska !== 'undefined') ? let_info.karte_ekonomska.length:0}/{let_info.ekonomska_klasa}
                   </div>
 
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-outline-dark" onClick={() => otvoriModalZaProdaju(let_info)}>Prodaja</button>
-                    <button type="button" class="btn btn-outline-dark">Status</button>
+                  <div className="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" className="btn btn-outline-dark" onClick={() => otvoriModalZaProdaju(let_info)}>Prodaja</button>
+                    
                   </div>
                 </a>
               })
@@ -142,17 +171,17 @@ const Radnik = () => {
         <Modal.Body>
           <div className="input-group mb-3 ">
             <span className="input-group-text" id="basic-addon1">I klasa</span>
-            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="prva_klasa" value={karte.prva_klasa}  onChange={handleInput}  />
+            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="prva_klasa" value={karte.prva_klasa.length}  onChange={handleInput}  />
             <span className="input-group-text text-success" id="basic-addon1">{karte.cijena_prva_klasa} $</span>
           </div>
           <div className="input-group mb-3 ">
             <span className="input-group-text" id="basic-addon1">Biznis klasa</span>
-            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="biznis_klasa" value={karte.biznis_klasa}  onChange={handleInput} />
+            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="biznis_klasa" value={karte.biznis_klasa.length}  onChange={handleInput} />
             <span className="input-group-text text-success" id="basic-addon1">{karte.cijena_biznis_klasa} $</span>
           </div>
           <div className="input-group mb-3 ">
             <span className="input-group-text" id="basic-addon1">Ekonomska klasa</span>
-            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="ekonomska_klasa" value={karte.ekonomska_klasa}  onChange={handleInput} />
+            <input type="text" className="form-control" aria-label="Email" aria-describedby="basic-addon1" name="ekonomska_klasa" value={karte.ekonomska_klasa.length}  onChange={handleInput} />
             <span className="input-group-text text-success" id="basic-addon1">{karte.cijena_ekonomska_klasa} $</span>
           </div>
           <hr className="text-danger border-2 opacity-50" />
