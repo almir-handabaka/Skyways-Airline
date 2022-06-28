@@ -26,7 +26,7 @@ const FlightTrackerMap = () => {
 	  		.then(data => {
 	  			setStates(data.states.slice(0, 50));
   			});
-		  }, 30000);
+		  }, 20000);
 
   		return () => clearInterval(interval);
 	}, []);

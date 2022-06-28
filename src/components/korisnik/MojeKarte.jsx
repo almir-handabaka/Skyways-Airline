@@ -1,0 +1,1 @@
+// prikaz kupljenih karti od korisnika

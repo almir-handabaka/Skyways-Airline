@@ -6,12 +6,14 @@ import Administrator from './components/administrator/Administrator';
 import Radnik from './components/radnik/Radnik';
 import FlightTrackerMap from './components/korisnik/FlightTrackerMap';
 import Korisnik from './components/korisnik/Korisnik';
+import Login from './components/Login';
 
 export default function App() {
   return (
     <div>
       <UserAuthContextProvider>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route path="/administrator" element={<Administrator />} />
           <Route path="/radnik" element={<Radnik />} />
           <Route path="/flight-tracker" element={<FlightTrackerMap />} />

@@ -5,7 +5,7 @@ import {
 import { auth, db } from "../firebase";
 import { v4 as uuidv4 } from 'uuid';
 import { collection, query, where, getDocs } from "firebase/firestore";
-
+import NavMeni from '.././components/navMeni/NavMeni'
 
 
 const userAuthContext = createContext();
@@ -32,23 +32,60 @@ export function UserAuthContextProvider({ children }) {
   */
 
 
+
   useEffect(() => {
+    const getAuth = async () => {
+      let tmp_user;
+      onAuthStateChanged(auth, async (currentuser) => {
+      
+      tmp_user = currentuser;
+      //setUser(currentuser);
+      const q = query(collection(db, "users"), where("email", "==", tmp_user.email));
+
+      const querySnapshot = await getDocs(q);
+      
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        //console.log(doc.id, " => ", doc.data());
+        setUser({ ...doc.data() });
+        
+
+        });
+      });
+    }
+
+    return () => {
+      getAuth();
+
+    };
+  }, [])
+
+
+  /*useEffect(() => {
     let tmp_user;
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-
-      //console.log("Auth", currentuser);
+      console.log("Auth", currentuser);
       tmp_user = currentuser;
-      setUser(currentuser);
+      //setUser(currentuser);
+      const q = query(collection(db, "users"), where("email", "==", tmp_user.email));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        //console.log(doc.id, " => ", doc.data());
+        setUser({ ...user, myId: doc.data().id, tickets: doc.data().tickets, type: doc.data().type });
+
+      });
     });
 
     return () => {
       unsubscribe();
 
     };
-  }, []);
+  }, []);*/
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     let tmp_user;
     const unsubscribe = async () => {
       const q = query(collection(db, "users"), where("email", "==", "almir.handabaka@gmail.com"));
@@ -68,13 +105,15 @@ export function UserAuthContextProvider({ children }) {
       unsubscribe();
 
     };
-  }, []);
+  }, []);*/
 
 
   return (
     <userAuthContext.Provider
       value={{ user, logIn, signUp, logOut }}
     >
+      
+      {<NavMeni />}
       {children}
     </userAuthContext.Provider>
   );
