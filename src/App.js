@@ -7,6 +7,7 @@ import Radnik from './components/radnik/Radnik';
 import FlightTrackerMap from './components/korisnik/FlightTrackerMap';
 import Korisnik from './components/korisnik/Korisnik';
 import Login from './components/Login';
+import MojeKarte from './components/korisnik/MojeKarte';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/radnik" element={<Radnik />} />
           <Route path="/flight-tracker" element={<FlightTrackerMap />} />
           <Route path="/korisnik" element={<Korisnik />} />
+          <Route path="/karte" element={< MojeKarte />} />
         </Routes>
       </UserAuthContextProvider>
     </div>

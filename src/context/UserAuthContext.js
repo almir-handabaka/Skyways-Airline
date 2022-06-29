@@ -31,7 +31,7 @@ export function UserAuthContextProvider({ children }) {
     const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
   */
 
-
+  console.log("auth context")
 
   useEffect(() => {
     const getAuth = async () => {
@@ -46,8 +46,10 @@ export function UserAuthContextProvider({ children }) {
       
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        //console.log(doc.id, " => ", doc.data());
+        console.log("doc.data().email")
+        console.log(doc.id, " => ", doc.data());
         setUser({ ...doc.data() });
+        
         
 
         });
@@ -56,7 +58,6 @@ export function UserAuthContextProvider({ children }) {
 
     return () => {
       getAuth();
-
     };
   }, [])
 
