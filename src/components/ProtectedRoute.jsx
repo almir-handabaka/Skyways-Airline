@@ -9,7 +9,7 @@ const ProtectedRoute = ({ isAllowed, children }) => {
   // check route acess inside the route
   const { user } = useUserAuth();
 
-  console.log("allowed", isAllowed)
+  /*console.log("allowed", isAllowed)
   console.log(user)
 
   if (!user || typeof (user.email) === 'undefined') {
@@ -29,7 +29,7 @@ const ProtectedRoute = ({ isAllowed, children }) => {
         return <Navigate to="/korisnik" />;
         break;
     }
-  }
+  }*/
 
   return (
     <>

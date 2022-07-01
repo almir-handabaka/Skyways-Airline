@@ -34,7 +34,16 @@ const Korisnik = () => {
     if(typeof value !== 'undefined'){
       let tmp_lista = []
       for(let i = 0;i<parseInt(value);i++){
-        tmp_lista.push(user.id)
+        let tmp_mapa = {
+          id_leta: karte.id,
+          id_prodavaca: 0,
+          id_kupca: user.id,
+          klasa: name,
+          cijena: 0
+        }
+
+        //tmp_lista.push(value)
+        tmp_lista.push(tmp_mapa)
       }
       console.log(tmp_lista)
       setKarte({...karte, [name]: tmp_lista});
@@ -47,10 +56,8 @@ const Korisnik = () => {
     const letoviRef = doc(db, "letovi", karte.id);
     const userRef = doc(db, "users", user.id);
 
-    // promjeniti u jednu transakciju, koristiti jedan niz/mapu za letove
-    // za radnikovu prodaju koristiti id radnika koji je prodao ili generisati id za sale
-    
 
+  
     try {
       await runTransaction(db, async (transaction) => {
         const sfDoc = await transaction.get(letoviRef);

@@ -6,7 +6,7 @@ import 'bootstrap/dist/js/bootstrap.js';
 import { runTransaction, doc, setDoc, collection, getDocs, where, query, deleteDoc, get, updateDoc, arrayUnion, arrayRemove  } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useState, useEffect } from 'react';
-
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const default_values = {prva_klasa: [], biznis_klasa: [], ekonomska_klasa: [], cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, id:"", totalna_cijena:0}
 
@@ -20,6 +20,7 @@ const Radnik = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const {user} = useUserAuth();
 
   const otvoriModalZaProdaju = (let_info) => {
     setKarte({...karte, ["cijena_prva_klasa"]: let_info.cijena_prva_klasa, ["cijena_biznis_klasa"]: let_info.cijena_biznis_klasa, ["cijena_ekonomska_klasa"]: let_info.cijena_ekonomska_klasa, ["id"]: let_info.id, totalna_cijena:0 });
@@ -34,9 +35,6 @@ const Radnik = () => {
     const letoviRef = doc(db, "letovi", karte.id);
 
 
-    // promjeniti u jednu transakciju, koristiti jedan niz/mapu za letove
-    // za radnikovu prodaju koristiti id radnika koji je prodao ili generisati id za sale
-    
 
     try {
       await runTransaction(db, async (transaction) => {
@@ -67,13 +65,30 @@ const Radnik = () => {
 
   }
 
+/*
+id leta
+id_prodavaca = -1 ako je u pitanju kupnja na sajtu
+id_karte - random generator
+id_kupca - 
+klasa
+cijena
+*/
 
   const handleInput = (event) => {
     const {name, value} = event.target;
     if(typeof value !== 'undefined'){
       let tmp_lista = []
       for(let i = 0;i<parseInt(value);i++){
-        tmp_lista.push(value)
+        let tmp_mapa = {
+          id_leta: karte.id,
+          id_prodavaca: user.id,
+          id_kupca: 0,
+          klasa: name,
+          cijena: 0
+
+        }
+        //tmp_lista.push(value)
+        tmp_lista.push(tmp_mapa)
       }
       console.log(tmp_lista)
       setKarte({...karte, [name]: tmp_lista});

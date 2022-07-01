@@ -16,14 +16,8 @@ const MojeKarte = () => {
 	const [userTickets, setUserTickets] = ([]);
 
 	const { user } = useUserAuth();
-	console.log("user", user);
 
-	const handleInput = (event) => {
-    const {name, value} = event.target;
-    console.log(name, value)
-   // setPretraga({...pretraga, [name]: value});
- 	}
-
+	
 	const handleSort = (event) => {
  		const {name, value} = event.target;
  		console.log(typeof value)
@@ -34,8 +28,36 @@ const MojeKarte = () => {
 		if(typeof(user) === 'null' ||  typeof(user.tickets) === 'undefined')
 			return;
 		
-		console.log(["saddsad", "kskksks", "kskksks", "kskksks", "kskksks", "kskksks"])
 		const letoviRef = collection(db, "letovi");
+    const userRef = doc(db, "users", user.id);
+
+		try {
+      await runTransaction(db, async (transaction) => {
+      	console.log("loop1")
+        const sfDoc = await transaction.get(letoviRef);
+        console.log("loop2")
+        const userDoc = await transaction.get(userRef);
+				console.log("loop3")
+        if (!sfDoc.exists() || !userDoc.exists()) {
+          throw "Document does not exist!";
+        }
+
+        let letovi = []
+        console.log("loop")
+        userDoc.data().tickets.forEach((ticket) => {
+        	console.log(ticket);
+        });
+
+
+        
+      });
+        console.log("Transaction successfully committed!");
+      } catch (e) {
+        console.log("Transaction failed: ", e);
+      }
+
+
+		/*const letoviRef = collection(db, "letovi");
     	const q1 = query(letoviRef, where("id", "in", user.tickets), orderBy("datum", sortParam));
     	const querySnapshot = await getDocs(q1);
     	querySnapshot.forEach((docq) => {
@@ -43,7 +65,7 @@ const MojeKarte = () => {
     		});
       	setLetovi([]);
       	
-      	setLetovi(querySnapshot.docs.map((doc) => ({ ...doc.data(), id:doc.id }) ));
+      	setLetovi(querySnapshot.docs.map((doc) => ({ ...doc.data(), id:doc.id }) ));*/
     }
 
 	useEffect(()=> {
