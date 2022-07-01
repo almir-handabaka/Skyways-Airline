@@ -73,11 +73,11 @@ const MojeKarte = () => {
           </Col>
         </Row>
 
-        <Row className="justify-content-center">
-        	<div className="row row-cols-1 row-cols-md-2 g-4">
-						{
+
+  <Row className="justify-content-center" xs={12}>
+  {
 	          letovi && letovi.map((let_info) => {
-	            return <div class="border">
+	            return <Col xs={5} className="border ms-2 mt-2 position-relative">
 	            	<Row>
 	            		<Col>
 	            			<span class="fw-light">Ka: </span>
@@ -106,12 +106,30 @@ const MojeKarte = () => {
 	            			<span class="fw-light">Vrijeme poletanja: </span>
 	            			<span class="">{let_info.vrijeme}</span>
 	            		</Col>
+	            		
 	            	</Row>
-	            </div>
+	            	<div className= "position-absolute top-0 end-0">
+		            		<div class="dropdown">
+										  <button class="btn btn-light btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+										    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+												  <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+												</svg>
+										  </button>
+										  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+										    <li><a class="dropdown-item" href="#">Refund</a></li>
+										    <li><a class="dropdown-item" href="#">Another action</a></li>
+										    <li><a class="dropdown-item" href="#">Something else here</a></li>
+										  </ul>
+										</div>
+	            		</div>
+	            </Col>
 	          })
 	        }
-          </div>
-        </Row>
+  </Row>
+
+
+
+        
       </Container>
 
       	

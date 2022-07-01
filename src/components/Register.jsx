@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useUserAuth } from "../context/UserAuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import "../App.css";
+import "./signin.css";
 import { db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const defaultValues = {
   username: "",
@@ -49,24 +50,29 @@ export default function Register() {
 
   return (
     <>
-      <main className="containerStyle">
-        <h2>Register your account!</h2>
-        <div>{errorMessage}</div>
-        <div className="childStyle" >
-          <label>Username: </label>
-          <input style={{ width: "50%" }} type="text" name="username" value={registerInfo.username} onChange={handleInputChange} />
-        </div>
-        <div className="childStyle">
-          <label>Password: </label>
-          <input style={{ width: "50%" }} type="password" name="password" value={registerInfo.password} onChange={handleInputChange} />
-        </div>
-        <div className="childStyle">
-          <input type="button" value="Register" onClick={createAccount} />
-        </div>
+      <main class="form-signin w-100 mx-auto text-center">
+        <form>
+          <img class="mb-4" src="" alt="" width="72" height="57" />
+          <h1 class="h3 mb-3 fw-normal">Registracija</h1>
+
+          <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+            <label for="floatingPassword">Password</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingPassword" placeholder="Korisničko ime" />
+            <label for="floatingPassword">Korisničko ime</label>
+          </div>
+
+         
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+          <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+        </form>
       </main>
-      <nav>
-        <Link to="/">You already have account? Click here to login!</Link>
-      </nav>
     </>
   );
 }

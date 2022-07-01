@@ -24,7 +24,7 @@ const FlightTrackerMap = () => {
 		    fetch('https://opensky-network.org/api/states/all')
 	  		.then(response => response.json())
 	  		.then(data => {
-	  			setStates(data.states.slice(0, 50));
+	  			setStates(data.states.slice(0, 100));
   			});
 		  }, 20000);
 
@@ -35,7 +35,7 @@ const FlightTrackerMap = () => {
 
 
   return (
-      	<MapContainer center={[51.505, -0.09]} zoom={5} scrollWheelZoom={false}>
+      	<MapContainer center={[51.505, -0.09]} zoom={4} scrollWheelZoom={false}>
 		  <TileLayer
 		    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 		    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

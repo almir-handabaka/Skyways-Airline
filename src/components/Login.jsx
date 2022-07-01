@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
 import Cookies from 'universal-cookie';
-
-import "../App.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./signin.css";
 
 /*
 almir.handabaka@gmail.com
@@ -42,7 +42,7 @@ export default function Login() {
 
     try {
       await logIn(loginInfo.username, loginInfo.password);
-      navigate('/home');
+      navigate('/administrator');
     } catch (err) {
       console.log(err);
       setErrorMessage(err.message);
@@ -65,24 +65,29 @@ export default function Login() {
 
   return (
     <>
-      <main className="containerStyle">
-        <h2>Welcome to login page!</h2>
-        <div>{errorMessage}</div>
-        <div className="childStyle" >
-          <label>Username </label>
-          <input style={{ width: "50%" }} type="text" name="username" value={loginInfo.username} onChange={handleLoginInput} />
-        </div>
-        <div className="childStyle">
-          <label>Password </label>
-          <input style={{ width: "50%" }} type="password" name="password" value={loginInfo.password} onChange={handleLoginInput} />
-        </div>
-        <div className="childStyle">
-          <input type="button" value="Login" onClick={loginInAccount} />
-        </div>
+      <main class="form-signin w-100 mx-auto text-center">
+        <form>
+          <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57" />
+          <h1 class="h3 mb-3 fw-normal">Login</h1>
+
+          <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+            <label for="floatingInput">Email address</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+            <label for="floatingPassword">Password</label>
+          </div>
+
+          <div class="checkbox mb-3">
+            <label>
+              <input type="checkbox" value="remember-me" /> Remember me
+            </label>
+          </div>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+          <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+        </form>
       </main>
-      <nav>
-        <Link to="/signup">You don't have account? Register here!</Link>
-      </nav>
     </>
   );
 }
