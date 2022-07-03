@@ -33,6 +33,9 @@ export function UserAuthContextProvider({ children }) {
       onAuthStateChanged(auth, async (currentuser) => {
       
       tmp_user = currentuser;
+      if(tmp_user === null){
+        return;
+      }
       const q = query(collection(db, "users"), where("email", "==", tmp_user.email));
 
       const querySnapshot = await getDocs(q);

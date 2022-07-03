@@ -17,8 +17,16 @@ export default function App() {
     <div>
       <UserAuthContextProvider>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
+          <Route path="/" element={
+            <ProtectedRoute isAllowed={['administrator', 'employee', 'user']} >
+                <Login/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/signup" element={
+            <ProtectedRoute isAllowed={['administrator', 'employee', 'user']} >
+                <Register/>
+            </ProtectedRoute>
+          } />
           
           <Route path="/administrator" element={
             <ProtectedRoute isAllowed={['administrator']} >
