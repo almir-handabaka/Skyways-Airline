@@ -72,7 +72,9 @@ export default function Register() {
 
          
           <button class="w-100 btn btn-lg btn-primary" type="submit" onClick={createAccount}>Sign up</button>
-          <p class="mt-5 mb-3 text-muted">&copy;2022</p>
+          <div className="checkbox mt-5 mb-3">
+            <Link to="/">Već imate registrovan profil? Prijavite se ovde!</Link>
+          </div>
         </div>
       </main>
     </>

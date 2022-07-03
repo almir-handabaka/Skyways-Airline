@@ -41,7 +41,7 @@ export default function Login() {
 
     try {
       await logIn(loginInfo.email, loginInfo.password);
-      navigate('/administrator');
+      navigate('/korisnik');
       console.log("login okej")
     } catch (err) {
       console.log(err);
@@ -78,7 +78,10 @@ export default function Login() {
             <label for="floatingPassword">Password</label>
           </div>
           <button class="w-100 btn btn-lg btn-primary" type="submit" onClick={loginInAccount}>Sign in</button>
-          <p class="mt-5 mb-3 text-muted">&copy;2022</p>
+          
+          <div className="checkbox mt-5 mb-3">
+            <Link to="/signup">Nemate registrovan račun? Registrujte se ovde!</Link>
+          </div>
         </div>
       </main>
     </>

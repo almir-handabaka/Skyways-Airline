@@ -41,7 +41,7 @@ export function UserAuthContextProvider({ children }) {
         // doc.data() is never undefined for query doc snapshots
         //console.log(doc.id, " => ", doc.data());
         setUser({ ...doc.data() });
-
+        console.log("setan user")
         });
       });
     }

@@ -36,7 +36,7 @@ export default function App() {
             <ProtectedRoute isAllowed={['user']} >
                 <Korisnik/>
             </ProtectedRoute>} />
-            <Route path="/mojekarte" element={
+            <Route path="/karte" element={
             <ProtectedRoute isAllowed={['user']} >
                 <MojeKarte/>
             </ProtectedRoute>} />
