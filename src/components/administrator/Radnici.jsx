@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { db } from "../../firebase";
@@ -36,14 +35,11 @@ const Radnici = () => {
         type: "employee",
         tickets: []
       }
-      console.log("kreiranje profila");
 
       await setDoc(doc(db, "users", new_user.id), new_user);
-      console.log(new_user);
 
     } catch(error){
       console.log(error.message);
-      setPoruka("Greska prilikom kreiranja profila!")
     }
 
     

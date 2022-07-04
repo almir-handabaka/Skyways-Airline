@@ -1,34 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { db } from "../../firebase";
-import { orderBy, runTransaction, doc, setDoc, collection, getDocs, where, query, deleteDoc  } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid';
-
-
+import { runTransaction, doc } from "firebase/firestore";
 
 
 const MojeKarte = () => {
 	const [letovi, setLetovi] = useState([]);
-	const [sort, setSort] = useState("desc");
-	const [userTickets, setUserTickets] = ([]);
 
 	const { user } = useUserAuth();
 
-	
 	const handleSort = (event) => {
  		const {name, value} = event.target;
- 		console.log(typeof value)
  		getLetove(value);
 	}
 
 	const getLetove = async (sortParam) => {
 		if(typeof(user) === 'null' ||  typeof(user.tickets) === 'undefined')
 			return;
-		
-		const letoviRef = collection(db, "letovi");
+
     const userRef = doc(db, "users", user.id);
 
 		try {

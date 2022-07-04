@@ -1,6 +1,5 @@
 import '../.././App.css';
-import { MapContainer, TileLayer, Marker, Popup, Map } from 'react-leaflet'
-import { useMap,useMapEvent, useMapEvents } from 'react-leaflet/hooks'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useState, useEffect } from "react";
 import L from "leaflet";
 
@@ -17,7 +16,7 @@ const FlightTrackerMap = () => {
 
 	const [states, setStates] = useState([]);
 
-	// fetches airplane data every 30 seconds
+	// fetches airplane data every 20 seconds
 	useEffect(() => {
 		const interval = setInterval(() => {
 		    console.log('Logs every 30 seconds');

@@ -1,9 +1,7 @@
-//import { useUserAuth } from "../context/UserAuthContext";
-import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
-import { runTransaction, doc, setDoc, collection, getDocs, where, query, deleteDoc, get, updateDoc, arrayUnion, arrayRemove  } from "firebase/firestore";
+import { runTransaction, doc, collection, getDocs, query, } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useState, useEffect } from 'react';
 import { useUserAuth } from "../../context/UserAuthContext";
@@ -14,7 +12,6 @@ const default_values = {prva_klasa: [], biznis_klasa: [], ekonomska_klasa: [], c
 const Radnik = () => {
   const [letovi, setLetovi] = useState([]);
   const [show, setShow] = useState(false);
-  const [idLeta, setIdLeta] = useState("");
   const [karte, setKarte] = useState(default_values);
 
   const handleClose = () => setShow(false);
@@ -24,7 +21,6 @@ const Radnik = () => {
 
   const otvoriModalZaProdaju = (let_info) => {
     setKarte({...karte, ["cijena_prva_klasa"]: let_info.cijena_prva_klasa, ["cijena_biznis_klasa"]: let_info.cijena_biznis_klasa, ["cijena_ekonomska_klasa"]: let_info.cijena_ekonomska_klasa, ["id"]: let_info.id, totalna_cijena:0 });
-    console.log(karte)
     handleShow();
   }
 
@@ -33,8 +29,6 @@ const Radnik = () => {
   const sacuvajProdaju = async () => {
 
     const letoviRef = doc(db, "letovi", karte.id);
-
-
 
     try {
       await runTransaction(db, async (transaction) => {
@@ -51,9 +45,6 @@ const Radnik = () => {
         newKarte_prva = newKarte_prva.concat(karte.prva_klasa);
         newKarte_ekonomska = newKarte_ekonomska.concat(karte.ekonomska_klasa);
         
-        console.log("--------------")
-        console.log(karte.biznis_klasa, karte.prva_klasa, karte.ekonomska_klasa)
-
         transaction.update(letoviRef, { karte_biznis: newKarte_biznis, karte_prva: newKarte_prva, karte_ekonomska:newKarte_ekonomska });
       });
         console.log("Transaction successfully committed!");
@@ -61,18 +52,9 @@ const Radnik = () => {
         console.log("Transaction failed: ", e);
       }
 
-    
-
+  
   }
 
-/*
-id leta
-id_prodavaca = -1 ako je u pitanju kupnja na sajtu
-id_karte - random generator
-id_kupca - 
-klasa
-cijena
-*/
 
   const handleInput = (event) => {
     const {name, value} = event.target;
@@ -90,7 +72,6 @@ cijena
         //tmp_lista.push(value)
         tmp_lista.push(tmp_mapa)
       }
-      console.log(tmp_lista)
       setKarte({...karte, [name]: tmp_lista});
     }
     

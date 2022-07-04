@@ -3,9 +3,7 @@ import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { v4 as uuidv4 } from 'uuid';
 import { collection, query, where, getDocs } from "firebase/firestore";
-import NavMeni from '.././components/navMeni/NavMeni'
 
 
 const userAuthContext = createContext();
@@ -22,7 +20,6 @@ export function UserAuthContextProvider({ children }) {
   }
 
   function logOut() {
-    console.log("odjava")
     return signOut(auth);
   }
 
@@ -44,7 +41,6 @@ export function UserAuthContextProvider({ children }) {
         // doc.data() is never undefined for query doc snapshots
         //console.log(doc.id, " => ", doc.data());
         setUser({ ...doc.data() });
-        console.log("setan user")
         });
       });
     }

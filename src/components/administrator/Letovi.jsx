@@ -1,11 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GiCommercialAirplane } from 'react-icons/gi';
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
-import { useUserAuth } from "../../context/UserAuthContext";
+import { Modal, Button } from 'react-bootstrap';
 import { db } from "../../firebase";
-import { doc, setDoc, collection, getDocs, where, query, deleteDoc  } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, query, } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -33,10 +31,8 @@ const Letovi = () => {
   }
 
   const editLet = (let_info) => {
-
     setEdit(true)
     setLet(let_info);
-
     return handleShow();
   }
 
@@ -64,10 +60,7 @@ const Letovi = () => {
     } catch(error){
       console.log("greska prilikom kreiranja letova");
       console.log(error.message);
-      //setPoruka("Greska prilikom kreiranja letova!")
-    }
-
-    
+    } 
 
   }
 
@@ -77,7 +70,6 @@ const Letovi = () => {
     const getLetove = async () => {
       setLetovi([]);
       const q = query(collection(db, "letovi"));
-
       const querySnapshot = await getDocs(q);
       setLetovi(querySnapshot.docs.map((doc) => ({ ...doc.data(), id:doc.id }) ));
     }
@@ -88,7 +80,6 @@ const Letovi = () => {
 
   }, [])
 
- // console.log("rerender");
   return (
     <>
       <div className="m-2 d-flex justify-content-between align-items-start"> 

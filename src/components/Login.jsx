@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
-import Cookies from 'universal-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./signin.css";
 
@@ -20,10 +19,9 @@ const defaultValues = {
   password: "",
 };
 
-
 export default function Login() {
   const navigate = useNavigate();
-  const { logIn, makeJWToken } = useUserAuth();
+  const { logIn } = useUserAuth();
 
   const [loginInfo, setLoginInfo] = useState(defaultValues);
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,23 +40,10 @@ export default function Login() {
     try {
       await logIn(loginInfo.email, loginInfo.password);
       navigate('/korisnik');
-      console.log("login okej")
     } catch (err) {
       console.log(err);
       setErrorMessage(err.message);
     }
-
-
-
-    /* makeJWToken(loginInfo).then((token) => {
-      cookies.set('auth_token', token, { path: '/' });
-      console.log("Token set", token);
-    }).catch((error) => {
-      console.log("catch greska");
-    }); */
-
-
-
 
   }
 

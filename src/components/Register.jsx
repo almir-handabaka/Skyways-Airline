@@ -6,7 +6,6 @@ import { db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '.././skyways-logo.png'; // with import
 
 
 const defaultValues = {
@@ -28,8 +27,6 @@ export default function Register() {
   }
 
   const createAccount = async () => {
-    console.log(registerInfo)
-
     try {
       await signUp(registerInfo.email, registerInfo.password);
       const new_user = {
@@ -42,7 +39,6 @@ export default function Register() {
       console.log("kreiranje profila");
 
       await setDoc(doc(db, "users", new_user.id), new_user);
-      console.log(new_user);
       navigate("/");
     } catch (err) {
       setErrorMessage(err.message);

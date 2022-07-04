@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useUserAuth } from "../../context/UserAuthContext";
 import { db } from "../../firebase";
-import { runTransaction, doc, setDoc, collection, getDocs, where, query, deleteDoc  } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid';
-import './korisnik.css';
-
+import { runTransaction, doc, collection, getDocs, where, query  } from "firebase/firestore";
 
 
 const default_values = {prva_klasa: [], biznis_klasa: [], ekonomska_klasa: [], cijena_prva_klasa:0, cijena_biznis_klasa:0, cijena_ekonomska_klasa:0, id:"", totalna_cijena:0}
-
 
 const Korisnik = () => {
 
@@ -19,7 +14,6 @@ const Korisnik = () => {
   const [pretraga, setPretraga] = useState({od: "", do: "", datum: ""});
   const [clearSearch, setClearSearch] = useState(false);
   const [show, setShow] = useState(false);
-  const [idLeta, setIdLeta] = useState("");
   const [karte, setKarte] = useState(default_values);
 
 
@@ -27,7 +21,6 @@ const Korisnik = () => {
   const handleShow = () => setShow(true);
 
   const {user} = useUserAuth();
-  console.log("user", user)
 
   const handleInput2 = (event) => {
     const {name, value} = event.target;
@@ -42,10 +35,8 @@ const Korisnik = () => {
           cijena: 0
         }
 
-        //tmp_lista.push(value)
         tmp_lista.push(tmp_mapa)
       }
-      console.log(tmp_lista)
       setKarte({...karte, [name]: tmp_lista});
     }
     
@@ -55,8 +46,6 @@ const Korisnik = () => {
 
     const letoviRef = doc(db, "letovi", karte.id);
     const userRef = doc(db, "users", user.id);
-
-
   
     try {
       await runTransaction(db, async (transaction) => {
@@ -80,11 +69,8 @@ const Korisnik = () => {
         newTickets = newTickets.concat(karte.prva_klasa);
         newTickets = newTickets.concat(karte.ekonomska_klasa);
 
-        console.log("--------------")
-        console.log(karte.biznis_klasa, karte.prva_klasa, karte.ekonomska_klasa)
-
         transaction.update(letoviRef, { karte_biznis: newKarte_biznis, karte_prva: newKarte_prva, karte_ekonomska:newKarte_ekonomska });
-        transaction.update(userRef, { tickets: newTickets })
+        transaction.update(userRef, { tickets: newTickets });
       });
         console.log("Transaction successfully committed!");
       } catch (e) {
@@ -97,11 +83,8 @@ const Korisnik = () => {
 
   const otvoriModalZaProdaju = (let_info) => {
     setKarte({...karte, ["cijena_prva_klasa"]: let_info.cijena_prva_klasa, ["cijena_biznis_klasa"]: let_info.cijena_biznis_klasa, ["cijena_ekonomska_klasa"]: let_info.cijena_ekonomska_klasa, ["id"]: let_info.id, totalna_cijena:0 });
-    console.log(karte)
     handleShow();
   }
-
-
 
   const handleInput = (event) => {
     const {name, value} = event.target;
@@ -121,7 +104,6 @@ const Korisnik = () => {
     getLetove();
     setClearSearch(false);
   }
-
 
   const getLetove = async () => {
       setLetovi([]);
